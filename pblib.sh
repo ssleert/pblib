@@ -111,7 +111,7 @@ function warn {
 
 function compl {
   # send complete message to stdout
-  local msg="$1"
+  local msg=$1
   shift $#
   printf "$color_green_bold"">>$color_reset %s\n" "$msg"
   return 0
@@ -125,7 +125,7 @@ function compl {
 
 function die {
   # if it used quit is not planned)
-  local error="$1"
+  local error=$1
   shift $#
   err "$error"
   exit 1
@@ -142,7 +142,27 @@ function quit {
 # STRINGS
 #
 
+function lower {
+  # convert string to lowercase
+  local string=$1
+  shift $#
+  printf '%s\n' "${string,,}"
+  return 0
+}
 
+function upper {
+  # convert string to uppercase
+  local string=$1
+  shift $#
+  printf '%s\n' "${string^^}"
+  return 0
+}
+
+function reverse_case {
+  # reverse string case
+  printf '%s\n' "${1~~}"
+  return 0
+}
 
 
 
@@ -152,7 +172,7 @@ function quit {
 
 function in_array {
   # search for the value in array
-  local search="$1"
+  local search=$1
   shift 1
   local array=("$@")
   shift $#
@@ -167,18 +187,15 @@ function in_array {
 }
 
 function reverse_array {
-  # reverse array by indexes
-  local array=("$@")
+  local -n array=$1
   shift $#
+  local array_copy=("${array[@]}")
 
-  local elements=${#array[@]}
-  local array_rev=()
+  array=()
 
-  while (( elements > 0 )); do
-    elements=$((elements - 1))
-    array_rev+=("${array[$elements]}")
+  for (( i=${#array_copy[@]}; i >= 0; i-- )); do
+    array+=("${array_copy[$i]}")
   done
 
-  echo "${array_rev[@]}"
   return 0
 }

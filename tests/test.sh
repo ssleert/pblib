@@ -95,8 +95,11 @@ food=(
   "bread"
 )
 
-# expected
-# milk is here
-# code is not here
-in_array "milk" ${food[@]} && echo "milk is here" || echo "milk is not here"
-in_array "cofe" ${food[@]} && echo "code is here" || echo "code is not here"
+in_array "milk" ${food[@]} && echo "milk is here"
+in_array "cofe" ${food[@]} || echo "cofe is not here"
+
+echo ""
+
+# array reverse
+reverse_array ${food[@]}
+
