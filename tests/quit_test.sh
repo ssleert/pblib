@@ -1,0 +1,3 @@
+source bplib.sh
+
+quit

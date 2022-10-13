@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 
+
 #
 # COLORS
 #
@@ -77,3 +78,78 @@ export color_blue_background_hintensity='\033[0;104m'
 export color_purple_background_hintensity='\033[0;105m'
 export color_cyan_background_hintensity='\033[0;106m'
 export color_white_background_hintensity='\033[0;107m'
+
+
+
+#
+# PRINTS
+#
+
+function msg {
+  # send message to stdout
+  local msg=$1
+  shift $#
+  printf "$color_blue_bold""::$color_white_bold %s$color_reset\n" "$msg"
+}
+
+function err {
+  # send error to stderr
+  local msg=$1
+  shift $#
+  printf "$color_red_bold""error:$color_reset %s\n" "$msg" >&2
+}
+
+function warn {
+  # send warning to stdout
+  local msg=$1
+  shift $#
+  printf "$color_yellow_bold""warning:$color_reset %s\n" "$msg"
+}
+
+function compl {
+  # send complete message to stdout
+  local msg="$1"
+  shift $#
+  printf "$color_green_bold"">>$color_reset %s\n" "$msg"
+}
+
+
+
+#
+# EXITS
+#
+
+function die {
+  # if it used quit is not planned)
+  local error="$1"
+  shift $#
+  err "$error"
+  exit 1
+}
+
+function quit {
+  # if it used quit is planned)
+  exit 0
+}
+
+
+
+#
+# CHECKS
+#
+
+function in_array {
+  # search for the value in array
+  local search="$1"
+  shift 1
+  local array=($@)
+  shift $#
+
+  for element in "${array[@]}"; do
+    if [[ $element == "$search" ]]; then
+      return 0
+    fi
+  done
+
+  return 1
+}

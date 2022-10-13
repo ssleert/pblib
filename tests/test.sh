@@ -77,3 +77,26 @@ echo -e "$color_purple_background_hintensity test text is sometimes hard to read
 echo -e "$color_cyan_background_hintensity test text is sometimes hard to read $color_reset"
 echo -e "$color_white_background_hintensity test text is sometimes hard to read $color_reset"
 echo -e "$color_reset"
+
+# prints tests
+msg "test message for user"
+err "test error for user"
+warn "test warning for user"
+compl "test complete for user"
+echo ""
+
+# exit tests
+# in separate files)
+
+# checks tests
+food=(
+  "tea"  
+  "milk"
+  "bread"
+)
+
+# expected
+# milk is here
+# code is not here
+in_array "milk" ${food[@]} && echo "milk is here" || echo "milk is not here"
+in_array "cofe" ${food[@]} && echo "code is here" || echo "code is not here"
