@@ -90,6 +90,7 @@ function msg {
   local msg=$1
   shift $#
   printf "$color_blue_bold""::$color_white_bold %s$color_reset\n" "$msg"
+  return 0
 }
 
 function err {
@@ -97,6 +98,7 @@ function err {
   local msg=$1
   shift $#
   printf "$color_red_bold""error:$color_reset %s\n" "$msg" >&2
+  return 0
 }
 
 function warn {
@@ -104,6 +106,7 @@ function warn {
   local msg=$1
   shift $#
   printf "$color_yellow_bold""warning:$color_reset %s\n" "$msg"
+  return 0
 }
 
 function compl {
@@ -111,6 +114,7 @@ function compl {
   local msg="$1"
   shift $#
   printf "$color_green_bold"">>$color_reset %s\n" "$msg"
+  return 0
 }
 
 
@@ -135,14 +139,22 @@ function quit {
 
 
 #
-# CHECKS
+# STRINGS
+#
+
+
+
+
+
+#
+# ARRAYS
 #
 
 function in_array {
   # search for the value in array
   local search="$1"
   shift 1
-  local array=($@)
+  local array=("$@")
   shift $#
 
   for element in "${array[@]}"; do
@@ -152,4 +164,21 @@ function in_array {
   done
 
   return 1
+}
+
+function reverse_array {
+  # reverse array by indexes
+  local array=("$@")
+  shift $#
+
+  local elements=${#array[@]}
+  local array_rev=()
+
+  while (( elements > 0 )); do
+    elements=$((elements - 1))
+    array_rev+=("${array[$elements]}")
+  done
+
+  echo "${array_rev[@]}"
+  return 0
 }
