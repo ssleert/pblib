@@ -112,5 +112,21 @@ reverse_case "ReVeRsE"
 
 echo ""
 
+in_string "asd" "vgsadalkdvasdwgldva;dlvsldv" && echo "asd is here"
+in_string "asd" "dfolkwqagealkralkgawelk" || echo "asd is not here"
+
+echo ""
+
 # strip all from string
 strip_all " on the" "sfome on the beat"
+
+echo ""
+strip_first "first" "firstfirstsecond"
+lstrip "firstf" "firstfirstsecond"
+rstrip "tright" "leftrightright"
+
+echo ""
+
+# tirm quotes from string
+trim_quotes "string 'with' \"quotes\""
+

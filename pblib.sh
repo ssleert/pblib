@@ -142,6 +142,18 @@ function quit {
 # STRINGS
 #
 
+function in_string {
+  local search=$1
+  local string=$2
+  shift $#
+
+  if [[ $string == *$search* ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 function lower {
   # convert string to lowercase
   local string=$1
@@ -166,6 +178,31 @@ function reverse_case {
   return 0
 }
 
+function strip_first {
+  # strip first instance of pattern from left side string
+  local pattern=$1
+  local string=$2
+
+  printf '%s\n' "${string/$pattern}"
+}
+
+function lstrip {
+  # strip instance of pattern from left side of string
+  local pattern=$1
+  local string=$2
+
+  printf '%s\n' "${string##$pattern}"
+}
+
+function rstrip {
+  # strip instance of pattern from right side of string
+  local pattern=$1
+  local string=$2
+
+  printf '%s\n' "${string%%$pattern}"
+}
+
+
 function strip_all {
   # strip all instances of pattern from string 
   local pattern=$1
@@ -177,7 +214,11 @@ function strip_all {
 
 function trim_quotes {
   # trim quites from string
-  : "${1//\'}"
+  local string=$1
+  shift $#
+
+  : "${string//\'}"
+  printf '%s\n' "${_//\"}"
 }
 
 
