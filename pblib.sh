@@ -160,10 +160,25 @@ function upper {
 
 function reverse_case {
   # reverse string case
-  printf '%s\n' "${1~~}"
+  local string=$1
+  shift $#
+  printf '%s\n' "${string~~}"
   return 0
 }
 
+function strip_all {
+  # strip all instances of pattern from string 
+  local pattern=$1
+  local string=$2
+  shift $#
+
+  printf '%s\n' "${string//$pattern}"
+}
+
+function trim_quotes {
+  # trim quites from string
+  : "${1//\'}"
+}
 
 
 #

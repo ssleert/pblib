@@ -95,11 +95,22 @@ food=(
   "bread"
 )
 
-in_array "milk" ${food[@]} && echo "milk is here"
-in_array "cofe" ${food[@]} || echo "cofe is not here"
+in_array "milk" "${food[@]}" && echo "milk is here"
+in_array "cofe" "${food[@]}" || echo "cofe is not here"
 
 echo ""
 
 # array reverse
-reverse_array ${food[@]}
+reverse_array "food"
+echo "${food[@]}"
 
+echo ""
+
+lower "LOWER"
+upper "upper"
+reverse_case "ReVeRsE"
+
+echo ""
+
+# strip all from string
+strip_all " on the" "sfome on the beat"
