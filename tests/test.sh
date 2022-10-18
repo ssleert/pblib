@@ -106,6 +106,10 @@ echo "${food[@]}"
 
 echo ""
 
+random_array_element ${food[@]}
+
+echo ""
+
 lower "LOWER"
 upper "upper"
 reverse_case "ReVeRsE"
@@ -129,4 +133,5 @@ echo ""
 
 # tirm quotes from string
 trim_quotes "string 'with' \"quotes\""
+
 

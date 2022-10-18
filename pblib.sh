@@ -183,7 +183,7 @@ function strip_first {
   local pattern=$1
   local string=$2
 
-  printf '%s\n' "${string/$pattern}"
+  printf '%s\n' "${string/"$pattern"}"
 }
 
 function lstrip {
@@ -191,7 +191,7 @@ function lstrip {
   local pattern=$1
   local string=$2
 
-  printf '%s\n' "${string##$pattern}"
+  printf '%s\n' "${string##"$pattern"}"
 }
 
 function rstrip {
@@ -199,12 +199,12 @@ function rstrip {
   local pattern=$1
   local string=$2
 
-  printf '%s\n' "${string%%$pattern}"
+  printf '%s\n' "${string%%"$pattern"}"
 }
 
 
 function strip_all {
-  # strip all instances of pattern from string 
+  # strip all instances of pattern from string
   local pattern=$1
   local string=$2
   shift $#
@@ -243,6 +243,7 @@ function in_array {
 }
 
 function reverse_array {
+  # reverse array by indexes
   local -n array=$1
   shift $#
   local array_copy=("${array[@]}")
@@ -254,4 +255,12 @@ function reverse_array {
   done
 
   return 0
+}
+
+function random_array_element {
+  # choose random element from array
+  local array=("$@")
+  shift $#
+
+  printf '%s\n' "${array[RANDOM % ${#array[@]}]}"
 }
