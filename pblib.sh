@@ -328,9 +328,12 @@ function cat {
 }
 
 function head {
+  # read lines from head of file and print it to stdout
   local lines=$1
   local file=$2
   shift $#
+
+  local head
 
   mapfile -tn "$lines" head < "$file"
 
@@ -340,6 +343,7 @@ function head {
 }
 
 function tail {
+  # read lines from tail of file and print it to stdout
   local lines=$1
   local file=$2
   shift $#
@@ -349,4 +353,69 @@ function tail {
   mapfile -tn 0 tail < "$file"
 
   printf '%s\n' "${tail[@]: -$lines}"
+
+  return 0
+}
+
+function lines {
+  local file=$1
+  shift $#
+
+  local lines
+
+  mapfile -tn 0 lines < "$file"
+
+  echo "${#lines[@]}"
+
+  return 0
+}
+
+function lines_while {
+  local file=$1
+  shift $#
+
+  lines=0
+
+  while IFS="" read -r _; do
+    ((lines++))
+  done < "$file"
+
+  echo "$lines"
+
+  return 0
+}
+
+function count {
+  local elements=($#)
+  shift $#
+
+  echo "${#elements[@]}"
+
+  return 0
+}
+
+function touch {
+  # create empty file)
+  local file=$1
+  shift $#
+
+  :>"$file"
+
+  return 0
+}
+
+function basename {
+  local file=$1
+  local suffix=$2
+  shift $#
+
+  local basename
+
+  basename=${file%"${##*[!/]}"}
+  basename=${basename##*/}
+  basename=${basename%"${suffix/"$basename"}"}
+
+  echo "$basename"
+
+  return 0
 }

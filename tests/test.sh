@@ -90,7 +90,7 @@ echo ""
 
 # checks tests
 food=(
-  "tea"  
+  "tea"
   "milk"
   "bread"
 )
@@ -132,7 +132,7 @@ rstrip "tright" "leftrightright"
 echo ""
 
 # tirm quotes from string
-trim_quotes "string 'with' \"quotes\""
+trim_quotes "string 'without' \"quotes\""
 
 # files
 
@@ -154,3 +154,17 @@ echo ""
 
 head "2" "./pblib.sh"
 tail "2" "./pblib.sh"
+
+echo ""
+
+lines "./pblib.sh"
+lines_while "./pblib.sh"
+
+count ./*
+
+echo ""
+
+touch "asd" && rm "asd"
+
+basename "./pblib.sh" ".sh"
+basename "./pblib.sh"
