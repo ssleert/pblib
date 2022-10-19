@@ -141,10 +141,16 @@ echo ""
 # get all files from dir recursively
 files_all=()
 
-files_recursive "files_all" "./"
+ls_recursively "files_all" "./"
 
 for i in "${files_all[@]}"; do
   echo "$i"
 done
 
 
+cat pblib.sh &> /dev/null
+
+echo ""
+
+head "2" "./pblib.sh"
+tail "2" "./pblib.sh"

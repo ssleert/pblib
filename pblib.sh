@@ -229,7 +229,7 @@ function strip_all {
   local string=$2
   shift $#
 
-  printf '%s\n' "${string//$pattern}"
+  printf '%s\n' "${string//"$pattern"}"
 
   return 0
 }
@@ -297,7 +297,7 @@ function random_array_element {
 # FILES
 #
 
-function files_recursive {
+function ls_recursively {
   # list files in dir recursively and write array in var
   local -n files_array=$1
   local dir=$2
@@ -312,4 +312,41 @@ function files_recursive {
   shopt -u globstar
 
   return 0
+}
+
+function cat {
+  # read content from file and print it to stdout
+  local files=($@)
+  shift $#
+
+  for file in "${files[@]}"; do
+    file_data="$(<"$1")"
+    echo "$file_data"
+  done
+
+  return 0
+}
+
+function head {
+  local lines=$1
+  local file=$2
+  shift $#
+
+  mapfile -tn "$lines" head < "$file"
+
+  printf '%s\n' "${head[@]}"
+
+  return 0
+}
+
+function tail {
+  local lines=$1
+  local file=$2
+  shift $#
+
+  local tail
+
+  mapfile -tn 0 tail < "$file"
+
+  printf '%s\n' "${tail[@]: -$lines}"
 }
