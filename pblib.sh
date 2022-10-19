@@ -86,7 +86,8 @@ export color_white_background_hintensity='\033[0;107m'
 #
 
 function msg {
-  # send message to stdout
+  # Send message to stdout
+  ## Usage: msg "message for user"
   local msg=$1
   shift $#
 
@@ -96,7 +97,8 @@ function msg {
 }
 
 function err {
-  # send error to stderr
+  # Send error to stderr
+  ## Usage: err "something went wrong but not enough to die"
   local msg=$1
   shift $#
 
@@ -107,6 +109,7 @@ function err {
 
 function warn {
   # send warning to stdout
+  ## Usage: warn "something went wrong but not enough to error"
   local msg=$1
   shift $#
 
@@ -117,6 +120,7 @@ function warn {
 
 function compl {
   # send complete message to stdout
+  ## Usage: compl "something complete"
   local msg=$1
   shift $#
 
@@ -133,6 +137,7 @@ function compl {
 
 function die {
   # if it used quit is not planned)
+  ## Usage: die "something very bad happened"
   local error=$1
   shift $#
   err "$error"
@@ -151,6 +156,8 @@ function quit {
 #
 
 function in_string {
+  # search for the value in string
+  ## Usage: in_string "pattern" "pattern in string"
   local search=$1
   local string=$2
   shift $#
@@ -164,6 +171,7 @@ function in_string {
 
 function lower {
   # convert string to lowercase
+  ## Usage: lower "LOWER"
   local string=$1
   shift $#
 
@@ -174,6 +182,7 @@ function lower {
 
 function upper {
   # convert string to uppercase
+  ## Usage: upper "UPPER"
   local string=$1
   shift $#
 
@@ -184,6 +193,7 @@ function upper {
 
 function reverse_case {
   # reverse string case
+  ## Usage: reverse_case "ReVeRsE"
   local string=$1
   shift $#
 
@@ -194,6 +204,7 @@ function reverse_case {
 
 function strip_first {
   # strip first instance of pattern from left side string
+  ## Usage: strip_first "second" "first second third"
   local pattern=$1
   local string=$2
 
@@ -204,6 +215,7 @@ function strip_first {
 
 function lstrip {
   # strip instance of pattern from left side of string
+  ## Usage: lstrip "left" "left right"
   local pattern=$1
   local string=$2
 
@@ -214,6 +226,7 @@ function lstrip {
 
 function rstrip {
   # strip instance of pattern from right side of string
+  ## Usage: rstrip "right" "left right"
   local pattern=$1
   local string=$2
 
@@ -225,6 +238,7 @@ function rstrip {
 
 function strip_all {
   # strip all instances of pattern from string
+  ## Usage: strip_all "all" "all all all"
   local pattern=$1
   local string=$2
   shift $#
@@ -236,6 +250,7 @@ function strip_all {
 
 function trim_quotes {
   # trim quites from string
+  ## Usage: trim_quotes "'\"quotes\"'"
   local string=$1
   shift $#
 
@@ -246,12 +261,14 @@ function trim_quotes {
 }
 
 
+
 #
 # ARRAYS
 #
 
 function in_array {
   # search for the value in array
+  ## Usage: in_array "milk" ("tea" "milk" "bread")
   local search=$1
   shift 1
   local array=("$@")
@@ -268,6 +285,9 @@ function in_array {
 
 function reverse_array {
   # reverse array by indexes
+  ## Usage: reverse_array "<var>"
+  ### where <var> is name of variable
+  ### without $
   local -n array=$1
   shift $#
   local array_copy=("${array[@]}")
@@ -283,6 +303,7 @@ function reverse_array {
 
 function random_array_element {
   # choose random element from array
+  # Usage: random_array_element ${array[@]}
   local array=("$@")
   shift $#
 
@@ -299,6 +320,9 @@ function random_array_element {
 
 function ls_recursively {
   # list files in dir recursively and write array in var
+  ## Usage: ls_recursively "<var>" "./"
+  ### where <var> is name of variable
+  ### without $
   local -n files_array=$1
   local dir=$2
   shift $#
@@ -316,6 +340,7 @@ function ls_recursively {
 
 function cat {
   # read content from file and print it to stdout
+  ## Usage: cat "./file"
   local files=($@)
   shift $#
 
@@ -329,6 +354,7 @@ function cat {
 
 function head {
   # read lines from head of file and print it to stdout
+  ## Usage: head 10 "./file"
   local lines=$1
   local file=$2
   shift $#
@@ -344,6 +370,7 @@ function head {
 
 function tail {
   # read lines from tail of file and print it to stdout
+  ## Usage: tail 10 "./file"
   local lines=$1
   local file=$2
   shift $#
@@ -358,6 +385,8 @@ function tail {
 }
 
 function lines {
+  # count lines in file with mapfile
+  ## Usage: lines "./file"
   local file=$1
   shift $#
 
@@ -371,6 +400,9 @@ function lines {
 }
 
 function lines_while {
+  # count lines in file with while
+  # p.s uses less ram but works much slower
+  ## Usage: lines_while "./file"
   local file=$1
   shift $#
 
@@ -385,17 +417,10 @@ function lines_while {
   return 0
 }
 
-function count {
-  local elements=($#)
-  shift $#
-
-  echo "${#elements[@]}"
-
-  return 0
-}
 
 function touch {
   # create empty file)
+  ## Usage: touch "./"
   local file=$1
   shift $#
 
@@ -405,6 +430,8 @@ function touch {
 }
 
 function basename {
+  # read basename of file
+  ## Usage: basename "./tests/test.sh"
   local file=$1
   local suffix=$2
   shift $#
@@ -416,6 +443,21 @@ function basename {
   basename=${basename%"${suffix/"$basename"}"}
 
   echo "$basename"
+
+  return 0
+}
+
+#
+# OTHER
+#
+
+function count {
+  # count files in dir
+  ## Usage: count ./*
+  local elements=($#)
+  shift $#
+
+  echo "${#elements[@]}"
 
   return 0
 }
