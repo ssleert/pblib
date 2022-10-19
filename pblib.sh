@@ -89,7 +89,9 @@ function msg {
   # send message to stdout
   local msg=$1
   shift $#
+
   printf "$color_blue_bold""::$color_white_bold %s$color_reset\n" "$msg"
+
   return 0
 }
 
@@ -97,7 +99,9 @@ function err {
   # send error to stderr
   local msg=$1
   shift $#
+
   printf "$color_red_bold""error:$color_reset %s\n" "$msg" >&2
+
   return 0
 }
 
@@ -105,7 +109,9 @@ function warn {
   # send warning to stdout
   local msg=$1
   shift $#
+
   printf "$color_yellow_bold""warning:$color_reset %s\n" "$msg"
+
   return 0
 }
 
@@ -113,7 +119,9 @@ function compl {
   # send complete message to stdout
   local msg=$1
   shift $#
+
   printf "$color_green_bold"">>$color_reset %s\n" "$msg"
+
   return 0
 }
 
@@ -158,7 +166,9 @@ function lower {
   # convert string to lowercase
   local string=$1
   shift $#
+
   printf '%s\n' "${string,,}"
+
   return 0
 }
 
@@ -166,7 +176,9 @@ function upper {
   # convert string to uppercase
   local string=$1
   shift $#
+
   printf '%s\n' "${string^^}"
+
   return 0
 }
 
@@ -174,7 +186,9 @@ function reverse_case {
   # reverse string case
   local string=$1
   shift $#
+
   printf '%s\n' "${string~~}"
+
   return 0
 }
 
@@ -184,6 +198,8 @@ function strip_first {
   local string=$2
 
   printf '%s\n' "${string/"$pattern"}"
+
+  return 0
 }
 
 function lstrip {
@@ -192,6 +208,8 @@ function lstrip {
   local string=$2
 
   printf '%s\n' "${string##"$pattern"}"
+
+  return 0
 }
 
 function rstrip {
@@ -200,6 +218,8 @@ function rstrip {
   local string=$2
 
   printf '%s\n' "${string%%"$pattern"}"
+
+  return 0
 }
 
 
@@ -210,6 +230,8 @@ function strip_all {
   shift $#
 
   printf '%s\n' "${string//$pattern}"
+
+  return 0
 }
 
 function trim_quotes {
@@ -219,6 +241,8 @@ function trim_quotes {
 
   : "${string//\'}"
   printf '%s\n' "${_//\"}"
+
+  return 0
 }
 
 
@@ -263,4 +287,29 @@ function random_array_element {
   shift $#
 
   printf '%s\n' "${array[RANDOM % ${#array[@]}]}"
+
+  return 0
+}
+
+
+
+#
+# FILES
+#
+
+function files_recursive {
+  # list files in dir recursively and write array in var
+  local -n files_array=$1
+  local dir=$2
+  shift $#
+
+  files_array=()
+
+  shopt -s globstar
+  for file in "$dir"**/*; do
+    files_array+=("$file")
+  done
+  shopt -u globstar
+
+  return 0
 }

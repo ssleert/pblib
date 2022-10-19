@@ -134,4 +134,17 @@ echo ""
 # tirm quotes from string
 trim_quotes "string 'with' \"quotes\""
 
+# files
+
+echo ""
+
+# get all files from dir recursively
+files_all=()
+
+files_recursive "files_all" "./"
+
+for i in "${files_all[@]}"; do
+  echo "$i"
+done
+
 
