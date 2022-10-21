@@ -344,6 +344,8 @@ function cat {
   local files=($@)
   shift $#
 
+  local file_data
+
   for file in "${files[@]}"; do
     file_data="$(<"$1")"
     echo "$file_data"
