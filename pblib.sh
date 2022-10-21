@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# project: pblib
+# ver:     0.1.1
+# author:  ssleert
+
 
 
 #
@@ -107,6 +111,15 @@ function err {
   return 0
 }
 
+function err_add {
+  local msg=$1
+  shift $#
+
+  printf "$color_red_bold""     |$color_reset %s\n" "$msg" >&2
+
+  return 0
+}
+
 function warn {
   # send warning to stdout
   ## Usage: warn "something went wrong but not enough to error"
@@ -139,8 +152,16 @@ function die {
   # if it used quit is not planned)
   ## Usage: die "something very bad happened"
   local error=$1
+  shift 1
+  local addons=("$@")
   shift $#
+
   err "$error"
+
+  for addon in "${addons[@]}"; do
+    err_add "$addon"
+  done
+
   exit 1
 }
 
@@ -341,13 +362,13 @@ function ls_recursively {
 function cat {
   # read content from file and print it to stdout
   ## Usage: cat "./file"
-  local files=($@)
+  local files=("$@")
   shift $#
 
   local file_data
 
   for file in "${files[@]}"; do
-    file_data="$(<"$1")"
+    file_data="$(<"$file")"
     echo "$file_data"
   done
 
