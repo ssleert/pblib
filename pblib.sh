@@ -112,6 +112,8 @@ function err {
 }
 
 function err_add {
+  # func for add info for error
+  ## Usage: err_add "some additional info for error"
   local msg=$1
   shift $#
 
