@@ -79,13 +79,22 @@ echo -e "$color_white_background_hintensity test text is sometimes hard to read 
 echo -e "$color_reset"
 
 # prints tests
-msg "test message for user"
-err "test error for user"
-err_add "error addon1"
-err_add "error addon2"
-err_add "error addon3"
-warn "test warning for user"
-compl "test complete for user"
+msg "test message for user" \
+   "addon1" \
+   "addon2" \
+   "addon3"
+err "test error for user" \
+   "addon1" \
+   "addon2" \
+   "addon3"
+warn "test warning for user" \
+   "addon1" \
+   "addon2" \
+   "addon3"
+compl "test complete for user" \
+   "addon1" \
+   "addon2" \
+   "addon3"
 echo ""
 
 # exit tests
@@ -125,9 +134,10 @@ in_string "asd" "dfolkwqagealkralkgawelk" || echo "asd is not here"
 echo ""
 
 # strip all from string
-strip_all " on the" "sfome on the beat"
+strip_all " on the" "sfome on the on the beat"
 
 echo ""
+
 strip_first "first" "firstfirstsecond"
 lstrip "firstf" "firstfirstsecond"
 rstrip "tright" "leftrightright"
