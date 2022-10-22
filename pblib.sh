@@ -313,7 +313,7 @@ function in_array {
   shift $#
 
   for element in "${array[@]}"; do
-    if [[ $element == "$search" ]]; then
+    if [[ "$element" == "$search" ]]; then
       return 0
     fi
   done
