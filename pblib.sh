@@ -97,12 +97,12 @@ function msg {
   local addons=("$@")
   shift $#
 
-  printf "$color_blue_bold""::$color_reset %s\n" "$msg"
+  printf "$color_blue_bold""::$color_white_bold %s$color_reset\n" "$msg"
   if [[ -z ${addons[*]} ]]; then
     return 0
   fi
   for addon in "${addons[@]}"; do
-    printf "$color_blue_bold"" |$color_reset %s\n" "$addon"
+    printf "$color_blue_bold"" |$color_white_bold %s$color_reset\n" "$addon"
   done
 
   return 0
@@ -154,12 +154,12 @@ function compl {
   local addons=("$@")
   shift $#
 
-  printf "$color_green_bold"">>>$color_reset %s\n" "$msg"
+  printf "$color_green_bold"">>>$color_white_bold %s$color_reset\n" "$msg"
   if [[ -z ${addons[*]} ]]; then
     return 0
   fi
   for addon in "${addons[@]}"; do
-    printf "$color_green_bold""  |$color_reset %s\n" "$addon"
+    printf "$color_green_bold""  |$color_white_bold %s$color_reset\n" "$addon"
   done
 
   return 0
