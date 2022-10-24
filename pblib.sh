@@ -94,13 +94,13 @@ function msg {
   local messages=("$@")
   shift $#
 
-	if [[ ${#messages[@]} -eq 0 ]]; then
-		return 1
-	else
+  if [[ ${#messages[@]} -eq 0 ]]; then
+    return 1
+  else
     echo -e "$color_blue_bold::$color_white_bold ${messages[0]}$color_reset"
-		for message in "${messages[@]:1}"; do
+    for message in "${messages[@]:1}"; do
       echo -e "$color_blue_bold |$color_white_bold $message$color_reset"
-		done
+    done
     return 0
   fi
 }
@@ -148,13 +148,13 @@ function compl {
   local messages=("$@")
   shift $#
 
-	if [[ ${#messages[@]} -eq 0 ]]; then
-		return 1
-	else
+  if [[ ${#messages[@]} -eq 0 ]]; then
+    return 1
+  else
     echo -e "$color_green_bold>>>$color_white_bold ${messages[0]}$color_reset"
-		for message in "${messages[@]:1}"; do
+    for message in "${messages[@]:1}"; do
       echo -e "$color_green_bold  |$color_white_bold $message$color_reset"
-		done
+    done
     return 0
   fi
 }
@@ -375,7 +375,7 @@ function reverse_array {
   if [[ -R $array || ${#array[@]} -le 1 ]]; then
     return 1
   else
-		local array_copy=("${array[@]}")
+    local array_copy=("${array[@]}")
     array=()
     for (( i=${#array_copy[@]}; i >= 0; i-- )); do
       array+=("${array_copy[$i]}")
@@ -498,7 +498,7 @@ function lines {
     else
       local file_data
       mapfile -tn 0 file_data < "$file"
-	    local lines_count="${#file_data[@]}"
+      local lines_count="${#file_data[@]}"
       echo "$lines_count"
       return 0
     fi
