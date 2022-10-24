@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # project: pblib
-# ver:     0.1.1
 # author:  ssleert
 
 
