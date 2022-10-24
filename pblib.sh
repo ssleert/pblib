@@ -92,77 +92,72 @@ export color_white_background_hintensity='\033[0;107m'
 function msg {
   # Send message to stdout
   ## Usage: msg "message for user"
-  local msg="$1"
-  shift 1
-  local addons=("$@")
+  local messages=("$@")
   shift $#
 
-  printf "$color_blue_bold""::$color_white_bold %s$color_reset\n" "$msg"
-  if [[ -z ${addons[*]} ]]; then
+	if [[ ${#messages[@]} -eq 0 ]]; then
+		return 1
+	else
+    echo -e "$color_blue_bold::$color_white_bold ${messages[0]}$color_reset"
+		for message in "${messages[@]:1}"; do
+      echo -e "$color_blue_bold |$color_white_bold $message$color_reset"
+		done
     return 0
   fi
-  for addon in "${addons[@]}"; do
-    printf "$color_blue_bold"" |$color_white_bold %s$color_reset\n" "$addon"
-  done
-
-  return 0
 }
 
 function err {
   # Send error to stderr
   ## Usage: err "something went wrong but not enough to die"
-  local err="$1"
-  shift 1
-  local addons=("$@")
+  local errors=("$@")
   shift $#
 
-  printf "$color_red_bold""error:$color_reset %s\n" "$err" >&2
-  if [[ -z ${addons[*]} ]]; then
+  if [[ ${#errors[@]} -eq 0 ]]; then
+    return 1
+  else
+    echo -e "$color_red_bold""error:$color_white_bold on ${BASH_LINENO[0]} line in ${BASH_SOURCE[1]} of ${FUNCNAME[1]}() func" \
+            "$color_red_bold\n     |$color_reset" >&2
+    for error in "${errors[@]}"; do
+      echo -e "$color_red_bold     |$color_reset $error" >&2
+    done
     return 0
   fi
-  for addon in "${addons[@]}"; do
-    printf "$color_red_bold""     |$color_reset %s\n" "$addon" >&2
-  done
-
-  return 0
 }
 
 function warn {
   # send warning to stdout
   ## Usage: warn "something went wrong but not enough to error"
-  local warn="$1"
-  shift 1
-  local addons=("$@")
+  local warnings=("$@")
   shift $#
 
-  printf "$color_yellow_bold""warning:$color_reset %s\n" "$warn"
-  if [[ -z ${addons[*]} ]]; then
+  if [[ ${#warnings[@]} -eq 0 ]]; then
+    return 1
+  else
+    echo -e "$color_yellow_bold""warning:$color_white_bold on ${BASH_LINENO[0]} line in ${BASH_SOURCE[1]} of ${FUNCNAME[1]}() func" \
+            "$color_yellow_bold\n       |$color_reset"
+    for warning in "${warnings[@]}"; do
+      echo -e "$color_yellow_bold       |$color_reset $warning"
+    done
     return 0
   fi
-  for addon in "${addons[@]}"; do
-    printf "$color_yellow_bold""       |$color_reset %s\n" "$addon"
-  done
 
-  return 0
 }
 
 function compl {
   # send complete message to stdout
   ## Usage: compl "something complete"
-  local msg="$1"
-  shift 1
-  local addons=("$@")
+  local messages=("$@")
   shift $#
 
-  printf "$color_green_bold"">>>$color_white_bold %s$color_reset\n" "$msg"
-  if [[ -z ${addons[*]} ]]; then
+	if [[ ${#messages[@]} -eq 0 ]]; then
+		return 1
+	else
+    echo -e "$color_green_bold>>>$color_white_bold ${messages[0]}$color_reset"
+		for message in "${messages[@]:1}"; do
+      echo -e "$color_green_bold  |$color_white_bold $message$color_reset"
+		done
     return 0
   fi
-  for addon in "${addons[@]}"; do
-    printf "$color_green_bold""  |$color_white_bold %s$color_reset\n" "$addon"
-  done
-
-  return 0
 }
 
 
@@ -174,12 +169,19 @@ function compl {
 function die {
   # if it used quit is not planned)
   ## Usage: die "something very bad happened"
-  local error_msgs=("$@")
+  local errors=("$@")
   shift $#
 
-  err "${error_msgs[@]}"
-
-  exit 1
+  if [[ ${#errors[@]} -eq 0 ]]; then
+    exit 1
+  else
+    echo -e "$color_red_bold""error:$color_white_bold on ${BASH_LINENO[0]} line in ${BASH_SOURCE[1]} of ${FUNCNAME[1]}() func" \
+            "$color_red_bold\n     |$color_reset" >&2
+    for error in "${errors[@]}"; do
+      echo -e "$color_red_bold     |$color_reset $error" >&2
+    done
+    exit 1
+  fi
 }
 
 function quit {
@@ -196,14 +198,18 @@ function quit {
 function in_string {
   # search for the value in string
   ## Usage: in_string "pattern" "pattern in string"
-  local search="$1"
+  local pattern="$1"
   local string="$2"
   shift $#
 
-  if [[ "$string" == *$search* ]]; then
-    return 0
-  else
+  if [[ -z $pattern || -z $string ]]; then
     return 1
+  else
+    if [[ $string == *$pattern* ]]; then
+      return 0
+    else
+      return 1
+    fi
   fi
 }
 
@@ -213,9 +219,13 @@ function lower {
   local string="$1"
   shift $#
 
-  printf '%s\n' "${string,,}"
-
-  return 0
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local lowered="${string,,}"
+    echo "$lowered"
+    return 0
+  fi
 }
 
 function upper {
@@ -224,9 +234,13 @@ function upper {
   local string="$1"
   shift $#
 
-  printf '%s\n' "${string^^}"
-
-  return 0
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local uppered="${string^^}"
+    echo "$uppered"
+    return 0
+  fi
 }
 
 function reverse_case {
@@ -235,9 +249,13 @@ function reverse_case {
   local string="$1"
   shift $#
 
-  printf '%s\n' "${string~~}"
-
-  return 0
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local reversed="${string~~}"
+    echo "$reversed"
+    return 0
+  fi
 }
 
 function strip_first {
@@ -245,10 +263,15 @@ function strip_first {
   ## Usage: strip_first "second" "first second third"
   local pattern="$1"
   local string="$2"
+  shift $#
 
-  printf '%s\n' "${string/"$pattern"}"
-
-  return 0
+  if [[ -z $pattern || -z $string ]]; then
+    return 1
+  else
+    local striped="${string/"$pattern"}"
+    echo "$striped"
+    return 0
+  fi
 }
 
 function lstrip {
@@ -256,10 +279,15 @@ function lstrip {
   ## Usage: lstrip "left" "left right"
   local pattern="$1"
   local string="$2"
+  shift $#
 
-  printf '%s\n' "${string##"$pattern"}"
-
-  return 0
+  if [[ -z $pattern || -z $string ]]; then
+    return 1
+  else
+    local striped="${string##"$pattern"}"
+    echo "$striped"
+    return 0
+  fi
 }
 
 function rstrip {
@@ -267,10 +295,15 @@ function rstrip {
   ## Usage: rstrip "right" "left right"
   local pattern="$1"
   local string="$2"
+  shift $#
 
-  printf '%s\n' "${string%%"$pattern"}"
-
-  return 0
+  if [[ -z $pattern || -z $string ]]; then
+    return 1
+  else
+    local striped="${string%%"$pattern"}"
+    echo "$striped"
+    return 0
+  fi
 }
 
 
@@ -281,9 +314,13 @@ function strip_all {
   local string="$2"
   shift $#
 
-  printf '%s\n' "${string//"$pattern"}"
-
-  return 0
+  if [[ -z $pattern || -z $string ]]; then
+    return 1
+  else
+    local striped="${string//$pattern}"
+    echo "$striped"
+    return 0
+  fi
 }
 
 function trim_quotes {
@@ -292,10 +329,14 @@ function trim_quotes {
   local string="$1"
   shift $#
 
-  : "${string//\'}"
-  printf '%s\n' "${_//\"}"
-
-  return 0
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local trimmed="${string//\'}"
+    local trimmed="${trimmed//\"}"
+    echo "$trimmed"
+    return 0
+  fi
 }
 
 
@@ -312,13 +353,16 @@ function in_array {
   local array=("$@")
   shift $#
 
-  for element in "${array[@]}"; do
-    if [[ "$element" == "$search" ]]; then
-      return 0
-    fi
-  done
-
-  return 1
+  if [[ -z $search || ${#array[@]} -eq 0 ]]; then
+    return 1
+  else
+    for element in "${array[@]}"; do
+      if [[ "$element" == "$search" ]]; then
+        return 0
+      fi
+    done
+    return 1
+  fi
 }
 
 function reverse_array {
@@ -328,15 +372,17 @@ function reverse_array {
   ### without $
   local -n array="$1"
   shift $#
-  local array_copy=("${array[@]}")
 
-  array=()
-
-  for (( i=${#array_copy[@]}; i >= 0; i-- )); do
-    array+=("${array_copy[$i]}")
-  done
-
-  return 0
+  if [[ -R $array || ${#array[@]} -le 1 ]]; then
+    return 1
+  else
+		local array_copy=("${array[@]}")
+    array=()
+    for (( i=${#array_copy[@]}; i >= 0; i-- )); do
+      array+=("${array_copy[$i]}")
+    done
+    return 0
+  fi
 }
 
 function random_array_element {
@@ -345,9 +391,13 @@ function random_array_element {
   local array=("$@")
   shift $#
 
-  printf '%s\n' "${array[RANDOM % ${#array[@]}]}"
-
-  return 0
+  if [[ ${#array[@]} -le 1 ]]; then
+    return 1
+  else
+    local element="${array[RANDOM % ${#array[@]}]}"
+    echo "$element"
+    return 0
+  fi
 }
 
 
@@ -358,22 +408,24 @@ function random_array_element {
 
 function ls_recursively {
   # list files in dir recursively and write array in var
-  ## Usage: ls_recursively "<var>" "./"
+  ## Usage: ls_recursively "<var>" "."
   ### where <var> is name of variable
   ### without $
   local -n files_array="$1"
   local dir="$2"
   shift $#
 
-  files_array=()
-
-  shopt -s globstar
-  for file in "$dir"**/*; do
-    files_array+=("$file")
-  done
-  shopt -u globstar
-
-  return 0
+  if [[ -R $files_array || -z $dir ]]; then
+    return 1
+  else
+    files_array=()
+    shopt -s globstar
+    for file in "$dir"/**/*; do
+      files_array+=("$file")
+    done
+    shopt -u globstar
+    return 0
+  fi
 }
 
 function cat {
@@ -382,14 +434,16 @@ function cat {
   local files=("$@")
   shift $#
 
-  local file_data
-
-  for file in "${files[@]}"; do
-    file_data="$(<"$file")"
-    echo "$file_data"
-  done
-
-  return 0
+  if [[ ${#files[@]} == 0 ]]; then
+    return 1
+  else
+    local file_data
+    for file in "${files[@]}"; do
+      file_data="$(<"$file")"
+      echo "$file_data"
+    done
+    return 0
+  fi
 }
 
 function head {
@@ -399,28 +453,36 @@ function head {
   local file="$2"
   shift $#
 
-  local head
-  mapfile -tn "$lines" head < "$file"
-
-  printf '%s\n' "${head[@]}"
-
-  return 0
+  if [[ -z $lines || -z $file ]]; then
+    return 1
+  else
+    local file_data
+    mapfile -tn "$lines" file_data < "$file"
+    printf '%s\n' "${file_data[@]}"
+    return 0
+  fi
 }
 
 function tail {
   # read lines from tail of file and print it to stdout
   ## Usage: tail 10 "./file"
   local lines="$1"
-  local file=$2
+  local file="$2"
   shift $#
 
-  local file_data
-  mapfile -tn 0 file_data < "$file"
-  local tail=("${file_data[@]: -$lines}")
-
-  printf '%s\n' "${tail[@]}"
-
-  return 0
+  if [[ -z $lines || -z $file ]]; then
+    return 1
+  else
+    if [[ ! -f $file ]]; then
+      return 1
+    else
+      local file_data
+      mapfile -tn 0 file_data < "$file"
+      local tail=("${file_data[@]: -$lines}")
+      printf '%s\n' "${tail[@]}"
+      return 0
+    fi
+  fi
 }
 
 function lines {
@@ -429,13 +491,19 @@ function lines {
   local file="$1"
   shift $#
 
-  local file_data
-  mapfile -tn 0 file_data < "$file"
-	local lines_count="${#file_data[@]}"
-
-  echo "$lines_count"
-
-  return 0
+  if [[ -z $file ]]; then
+    return 1
+  else
+    if [[ ! -f $file ]]; then
+      return 1
+    else
+      local file_data
+      mapfile -tn 0 file_data < "$file"
+	    local lines_count="${#file_data[@]}"
+      echo "$lines_count"
+      return 0
+    fi
+  fi
 }
 
 function lines_while {
@@ -445,15 +513,20 @@ function lines_while {
   local file="$1"
   shift $#
 
-  lines=0
-
-  while IFS="" read -r _; do
-    ((lines++))
-  done < "$file"
-
-  echo "$lines"
-
-  return 0
+  if [[ -z $file ]]; then
+    return 1
+  else
+    if [[ ! -f $file ]]; then
+      return 1
+    else
+      lines=0
+      while IFS="" read -r _; do
+        ((lines++))
+      done < "$file"
+      echo "$lines"
+      return 0
+    fi
+  fi
 }
 
 
@@ -463,9 +536,16 @@ function touch {
   local file="$1"
   shift $#
 
-  :>"$file"
-
-  return 0
+  if [[ -z $file ]]; then
+    return 1
+  else
+    :>"$file"
+    if [[ $? -ne 0 ]]; then
+      return 1
+    else
+      return 0
+    fi
+  fi
 }
 
 function basename {
@@ -475,15 +555,17 @@ function basename {
   local suffix="$2"
   shift $#
 
-  local basename
+  if [[ -z $file ]]; then
+    return 1
+  else
+    local basename
+    basename=${file%"${##*[!/]}"}
+    basename=${basename##*/}
+    basename=${basename%"${suffix/"$basename"}"}
+    echo "$basename"
 
-  basename=${file%"${##*[!/]}"}
-  basename=${basename##*/}
-  basename=${basename%"${suffix/"$basename"}"}
-
-  echo "$basename"
-
-  return 0
+    return 0
+  fi
 }
 
 #
@@ -496,7 +578,12 @@ function count {
   local elements_count="$#"
   shift $#
 
-  echo "$elements_count"
-
-  return 0
+  if [[ $elements_count -eq 0 ]]; then
+    return 1
+  else
+    echo "$elements_count"
+    return 0
+  fi
 }
+
+export PBLIB_LOADED=1

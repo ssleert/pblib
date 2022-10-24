@@ -114,11 +114,11 @@ echo ""
 
 # array reverse
 reverse_array "food"
-echo "${food[@]}"
+echo "${food[*]}"
 
 echo ""
 
-random_array_element ${food[@]}
+random_array_element "${food[@]}"
 
 echo ""
 
@@ -154,7 +154,7 @@ echo ""
 # get all files from dir recursively
 files_all=()
 
-ls_recursively "files_all" "./"
+ls_recursively "files_all" "."
 
 for i in "${files_all[@]}"; do
   echo "$i"

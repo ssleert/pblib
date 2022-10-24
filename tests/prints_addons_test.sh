@@ -10,9 +10,9 @@ compl \
 echo ""
 
 msg \
-  "asd" \
-  "asd" \
-  "asd"
+  "asd1" \
+  "asd2" \
+  "asd3"
 
 echo ""
 
@@ -23,9 +23,8 @@ warn \
 
 echo ""
 
-err \
-  "asd" \
-  "asd" \
-  "asd"
+err "asd" \
+    "asd" \
+    "asd"
 
 echo ""
