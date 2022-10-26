@@ -610,4 +610,16 @@ function read_sleep {
   read -rt "$sleep_time" <> <(:) || :
 }
 
+function in_path {
+  # check is program in path
+  ## Usage: in_path "nmtui"
+  local program_name="$1"
+
+  if ! type -p "$program_name" &> /dev/null; then
+    return 1
+  else
+    return 0
+  fi
+}
+
 export PBLIB_LOADED=1

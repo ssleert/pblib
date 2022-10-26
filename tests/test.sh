@@ -185,3 +185,5 @@ basename "./pblib.sh"
 check_sudo && echo "sudo is here"
 
 read_sleep 1 
+
+in_path "test" && echo "program in path"
