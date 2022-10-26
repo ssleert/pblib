@@ -567,6 +567,8 @@ function basename {
   fi
 }
 
+
+
 #
 # OTHER
 #
@@ -585,20 +587,34 @@ function count {
   fi
 }
 
+function in_path {
+  # check is program in path
+  ## Usage: in_path "nmtui"
+  local program_name="$1"
+  shift $#
+
+  if ! type -p "$program_name" &> /dev/null; then
+    return 1
+  else
+    return 0
+  fi
+}
+
 function check_sudo {
   # check is sudo in path and activate it
   ## Usage: check_sudo
+  shift $#
   local su_program="sudo"
 
-  if ! type -p "$su_program" &> /dev/null; then
+  if ! in_path "$su_program"; then
     return 1
   else
     $su_program true
     if [[ $? -ne 0 ]]; then
       return 1
+    else 
+      return 0
     fi
-
-    return 0
   fi
 }
 
@@ -606,20 +622,9 @@ function read_sleep {
   # sleep execution through file descriptor
   ## Usage: read_sleep 1
   local sleep_time="$1"
+  shift $#
 
   read -rt "$sleep_time" <> <(:) || :
-}
-
-function in_path {
-  # check is program in path
-  ## Usage: in_path "nmtui"
-  local program_name="$1"
-
-  if ! type -p "$program_name" &> /dev/null; then
-    return 1
-  else
-    return 0
-  fi
 }
 
 export PBLIB_LOADED=1
