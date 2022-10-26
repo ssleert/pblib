@@ -593,7 +593,7 @@ function check_sudo {
   if ! type -p "$su_program" &> /dev/null; then
     return 1
   else
-    sudo true
+    $su_program true
     if [[ $? -ne 0 ]]; then
       return 1
     fi
