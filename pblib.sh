@@ -585,4 +585,29 @@ function count {
   fi
 }
 
+function check_sudo {
+  # check is sudo in path and activate it
+  ## Usage: check_sudo
+  local su_program="sudo"
+
+  if ! type -p "$su_program" &> /dev/null; then
+    return 1
+  else
+    sudo true
+    if [[ $? -ne 0 ]]; then
+      return 1
+    fi
+
+    return 0
+  fi
+}
+
+function read_sleep {
+  # sleep execution through file descriptor
+  ## Usage: read_sleep 1
+  local sleep_time="$1"
+
+  read -rt "$sleep_time" <> <(:) || :
+}
+
 export PBLIB_LOADED=1

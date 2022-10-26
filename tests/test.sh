@@ -181,3 +181,7 @@ touch "asd" && rm "asd"
 
 basename "./pblib.sh" ".sh"
 basename "./pblib.sh"
+
+check_sudo && echo "sudo is here"
+
+read_sleep 1 
