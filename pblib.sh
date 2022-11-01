@@ -624,7 +624,12 @@ function read_sleep {
   local sleep_time="$1"
   shift $#
 
-  read -rt "$sleep_time" <> <(:) || :
+  read -rt "$sleep_time" <> <(:) || : 
+  if [[ $? -ne 0 ]]; then
+    return 1
+  else
+    return 0
+  fi
 }
 
 export PBLIB_LOADED=1
