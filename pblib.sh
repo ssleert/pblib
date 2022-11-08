@@ -85,20 +85,73 @@ export color_white_background_hintensity='\033[0;107m'
 function msg {
   # Send message to stdout
   ## Usage: msg "message for user" "addition for message"
-  if [[ -z $1 ]]; then
+  if [[ $# -eq 0 ]]; then
     return 1
   fi
-
-  local message="$1"
-  shift 1
-  local addons=("$@")
+  local messages=("$@")
   shift $#
 
-  echo -e "$color_blue_bold::$color_white_bold $message$color_reset"
-  for addon in "${addons[@]}"; do
-    echo -e "$color_blue_bold |$color_white_bold $addon$color_reset"
+  echo -e "$color_blue_bold::$color_white_bold ${messages[0]}$color_reset"
+  for message in "${messages[@]:1}"; do
+    echo -e "$color_blue_bold |$color_white_bold $message$color_reset"
   done
 
   return 0
 }
 
+function err {
+  # Send error to stderr
+  ## Usage: err "error for user" "addition for error"
+  if [[ $# -eq 0 ]]; then
+    return 1
+
+  fi
+
+  local errors=("$@")
+  shift $#
+
+  echo -e "$color_red_bold""error:$color_white_bold on ${BASH_LINENO[0]} line in ${BASH_SOURCE[1]} of ${FUNCNAME[1]}() func" \
+          "$color_red_bold\n     |$color_reset" >&2
+  for error in "${errors[@]}"; do
+    echo -e "$color_red_bold     |$color_reset $error" >&2
+  done
+
+  return 0
+}
+
+function warn {
+  # Send warning to stdout
+  ## Usage: warn "warning for user" "addition for warning"
+  if [[ $# -eq 0 ]]; then
+    return 1
+  fi
+
+  local warnings=("$@")
+  shift $#
+
+  echo -e "$color_yellow_bold""warning:$color_white_bold on ${BASH_LINENO[0]} line in ${BASH_SOURCE[1]} of ${FUNCNAME[1]}() func" \
+          "$color_yellow_bold\n       |$color_reset"
+  for addon in "${warnings[@]}"; do
+    echo -e "$color_yellow_bold       |$color_white_bold $addon$color_reset"
+  done
+
+  return 0
+}
+
+function compl {
+  # Send complete message to stdout
+  ## Usage: compl "something complete"
+  if [[ $# -eq 0 ]]; then
+    return 1
+  fi
+
+  local messages=("$@")
+  shift $#
+
+  echo -e "$color_green_bold>>>$color_white_bold ${messages[0]}$color_reset"
+  for message in "${messages[@]:1}"; do
+    echo -e "$color_green_bold  |$color_white_bold $message$color_reset"
+  done
+
+  return 0
+}
