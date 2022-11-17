@@ -88,6 +88,7 @@ function msg {
   if [[ $# -eq 0 ]]; then
     return 1
   fi
+
   local messages=("$@")
   shift $#
 
@@ -104,7 +105,6 @@ function err {
   ## Usage: err "error for user" "addition for error"
   if [[ $# -eq 0 ]]; then
     return 1
-
   fi
 
   local errors=("$@")
@@ -154,4 +154,8 @@ function compl {
   done
 
   return 0
+}
+
+function die {
+  :
 }
