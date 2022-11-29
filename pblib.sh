@@ -316,8 +316,8 @@ function pblib::arr::reverse() {
   if (( ${#array[@]} == 0 )); then
     return 1
   else
-    for i in "${!array[@]}"; do
-      reversed+=("${array[-$i+2]}")
+    for (( i = ${#array[@]} - 1; i >= 0; --i )); do
+      reversed+=("${array[$i]}")
     done
     printf '%s\n' "${reversed[@]}"
     return 0
@@ -332,7 +332,7 @@ function pblib::arr::random() {
     return 1
   else
     local -r element="${array[RANDOM % ${#array[@]}]}"
-    printf '%s\n' "$element"
+    printf '%s\n' "${element}"
     return 0
   fi
 }
@@ -347,7 +347,7 @@ function pblib::fs::ls_recursively() {
   else
     shopt -s globstar
     for file in "$dir"/**/*; do
-      files+=("$file")
+      files+=("${file}")
     done
     shopt -u globstar
     printf '%s\n' "${files[@]}"
@@ -360,17 +360,63 @@ function pblib::fs::cat() {
   shift $#
   local file_data=''
 
-  if [[ ${#files[@]} == 0 ]]; then
+  if (( ${#files[@]} == 0 )); then
     return 1
   else
     for file in "${files[@]}"; do
       if [[ ! -f $file ]]; then
         return 1
       else
-        file_data="$(<"$file")"
-        printf '%s\n' "$file_data"
+        file_data="$(<"${file}")"
+        printf '%s\n' "${file_data}"
         return 0
       fi
     done
+  fi
+}
+
+function pblib::fs::head() {
+  local -ri lines="$1"
+  local -r file="$2"
+  shift $#
+
+  if (( lines == 0 )) || [[ ! -f $file ]]; then
+    return 1
+  else
+    local file_data
+    mapfile -tn "${lines}" file_data < "${file}"
+    readonly file_data
+    printf '%s\n' "${file_data[@]}"
+    return 0
+  fi
+}
+
+function pblib::fs::tail() {
+  local -ri lines="$1"
+  local -r file="$2"
+  shift $#
+  
+  if (( lines == 0 )) || [[ ! -f $file ]]; then
+    return 1
+  else
+    local file_data
+    mapfile -t file_data < "${file}"
+    readonly file_data
+    local -r tail=("${file_data[@]: -$lines}")
+    printf '%s\n' "${tail[@]}"
+    return 0
+  fi
+}
+
+function pblib::fs::lines() {
+  local -r file="$1"
+  shift $#
+
+  if [[ ! -f $file ]]; then
+    return 1
+  else
+    local file_date
+    mapfile -t 0 file_data < "${file}"
+    local lines_count="${#file_data[@]}"
   fi
 }
