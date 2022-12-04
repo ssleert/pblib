@@ -416,7 +416,10 @@ function pblib::fs::lines() {
     return 1
   else
     local file_date
-    mapfile -t 0 file_data < "${file}"
-    local lines_count="${#file_data[@]}"
+    mapfile -t file_date < "${file}"
+    readonly file_date
+    local -ri lines_count="${#file_date[@]}"
+    printf '%u\n' "${lines_count}"
+    return 0
   fi
 }
