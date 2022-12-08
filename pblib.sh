@@ -281,7 +281,6 @@ function pblib::str::trim_quotes() {
   local -r string="$1"
   shift $#
 
-
   if [[ -z $string ]]; then
     return 1
   else
@@ -289,6 +288,23 @@ function pblib::str::trim_quotes() {
     local -r trimmed_double="${trimmed_single//\"}"
     printf '%s\n' "${trimmed_double}"
     return 0
+  fi
+}
+
+function pblib::str::regex() {
+  local -r string="$1"
+  local -r regex="$2"
+  shift $#
+
+  if [[ -z $string || -z $regex ]]; then
+    return 1
+  else
+    [[ $string =~ $regex ]]
+    if (( $? == 0 )); then
+      return 0
+    else
+      return 1
+    fi
   fi
 }
 
