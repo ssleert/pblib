@@ -1,8 +1,8 @@
 source pblib.sh
 
 function main() {
-  pblib::test_compl true
-  pblib::test_compl false
+  pblib::test::test_compl true
+  pblib::test::test_compl false
 }
 
 main "$@"

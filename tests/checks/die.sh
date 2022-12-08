@@ -1,9 +1,9 @@
 source pblib.sh
 
 function main() {
-  pblib::die 12 'err' \
-                'addon' \
-                'addon'
+  pblib::die 2 'err' \
+               'addon' \
+               'addon'
 }
 
 main "$@"
