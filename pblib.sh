@@ -202,8 +202,8 @@ function pblib::str::upper() {
   if [[ -z $string ]]; then
     return 1
   else
-    local -r lowered="${string^^}"
-    printf '%s\n' "${lowered}" 
+    local -r uppered="${string^^}"
+    printf '%s\n' "${uppered}" 
     return 0
   fi
 }
@@ -235,7 +235,7 @@ function pblib::str::strip() {
   fi
 }
 
-function pblib::str::stripf() {
+function pblib::str::fstrip() {
   local -r pattern="$1"
   local -r string="$2"
   shift $#
@@ -281,12 +281,38 @@ function pblib::str::trim_quotes() {
   local -r string="$1"
   shift $#
 
+
   if [[ -z $string ]]; then
     return 1
   else
     local -r trimmed_single="${string//\'}"
     local -r trimmed_double="${trimmed_single//\"}"
     printf '%s\n' "${trimmed_double}"
+    return 0
+  fi
+}
+
+function pblib::str::2arr() {
+  local -r string="$1"
+  shift $#
+
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local -a array
+    local char
+    for (( i = 0; i < ${#string}; ++i )); do
+      char="${string:${i}:1}" 
+      if [[ $char = '' ]]; then
+        array+=(' ')
+      else
+        array+=("${char}")
+      fi
+    done
+    unset char
+    readonly array
+    printf '%s\n' "${array[@]}"
+    return 0
   fi
 }
 
@@ -311,14 +337,15 @@ function pblib::arr::contains() {
 function pblib::arr::reverse() {
   local -ra array=("$@")
   shift $#
-  local -a reversed=()
 
   if (( ${#array[@]} == 0 )); then
     return 1
   else
+    local -a reversed=()
     for (( i = ${#array[@]} - 1; i >= 0; --i )); do
       reversed+=("${array[$i]}")
     done
+    readonly reversed
     printf '%s\n' "${reversed[@]}"
     return 0
   fi
@@ -358,7 +385,6 @@ function pblib::fs::ls_recursively() {
 function pblib::fs::cat() {
   local -ra files=("$@")
   shift $#
-  local file_data=''
 
   if (( ${#files[@]} == 0 )); then
     return 1
@@ -367,7 +393,7 @@ function pblib::fs::cat() {
       if [[ ! -f $file ]]; then
         return 1
       else
-        file_data="$(<"${file}")"
+        local -r file_data="$(<"${file}")"
         printf '%s\n' "${file_data}"
         return 0
       fi
@@ -423,3 +449,64 @@ function pblib::fs::lines() {
     return 0
   fi
 }
+
+function pblib::fs::lines_while() {
+  local -r file="$1"
+  shift $#
+
+  if [[ ! -f $file ]]; then
+    return 1
+  else
+    local -i lines_count=0
+    while IFS='' read -r _; do
+      ((++lines_count))
+    done < "${file}"
+    readonly lines_count
+    printf '%u\n' "${lines_count}"
+    return 0
+  fi
+}
+
+function pblib::fs::touch() {
+  local -r file="$1"
+  shift $#
+
+  if [[ -z $file ]]; then
+    return 1
+  else
+    :>"${file}"
+    if (( $? != 0 )); then
+      return 1
+    else
+      return 0
+    fi
+  fi
+}
+
+function pblib::fs::basename() {
+  local -r file="$1"
+  local -r suffix="$2"
+  shift $#
+
+  if [[ -z $file ]]; then
+    return 1
+  else
+    local -r basename_no_path="${file%"${##*[!/]}"}"
+    local -r basename="${basename_no_path##*/}"
+    local -r basename_no_suffix="${basename%"${suffix/"${basename}"}"}"
+		printf '%s\n' "${basename_no_suffix}"
+    return 0
+  fi
+}
+
+function pblib::fs::count() {
+  local -ri elements_count="$#"
+
+  if (( elements_count == 0 )); then
+    return 1
+  else
+    printf '%u\n' "${elements_count}"
+  fi
+}
+
+declare -xri PBLIB_LOADED=1

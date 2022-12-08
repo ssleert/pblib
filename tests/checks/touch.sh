@@ -1,7 +1,7 @@
 source pblib.sh
 
 function main() {
-  pblib::str::stripf 'str' 'asdstrbsdstr'
+  pblib::fs::touch 'asd'
 }
 
 main "$@"

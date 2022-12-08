@@ -593,7 +593,6 @@ function basename {
     basename=${basename##*/}
     basename=${basename%"${suffix/"$basename"}"}
     echo "$basename"
-
     return 0
   fi
 }
