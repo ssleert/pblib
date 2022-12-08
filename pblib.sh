@@ -154,7 +154,7 @@ function pblib::die() {
     printf "${clr_red_bold}error: ${clr_white_bold}on %u line in %s of %s() func\n     ${clr_red_bold}|${clr_reset}\n" "${BASH_LINENO[0]}" "${BASH_SOURCE[1]}" "${FUNCNAME[1]}" >&2
     for message in "${messages[@]}"; do
       printf "     ${clr_red_bold}|${clr_reset} %s\n" "${message}" >&2
-    done    
+    done
 
     if (( exit_code == 0 )); then
       exit 1
@@ -190,7 +190,7 @@ function pblib::str::lower() {
     return 1
   else
     local -r lowered="${string,,}"
-    printf '%s\n' "${lowered}" 
+    printf '%s\n' "${lowered}"
     return 0
   fi
 }
@@ -203,7 +203,7 @@ function pblib::str::upper() {
     return 1
   else
     local -r uppered="${string^^}"
-    printf '%s\n' "${uppered}" 
+    printf '%s\n' "${uppered}"
     return 0
   fi
 }
@@ -225,7 +225,7 @@ function pblib::str::strip() {
   local -r pattern="$1"
   local -r string="$2"
   shift $#
-  
+
   if [[ -z $pattern || -z $string ]]; then
     return 1
   else
@@ -292,6 +292,20 @@ function pblib::str::trim_quotes() {
   fi
 }
 
+function pblib::str::trim() {
+  local -r string="$1"
+  shift $#
+
+  if [[ -z $string ]]; then
+    return 1
+  else
+    local -r trimmed_left="${string#"${string%%[![:space:]]*}"}"
+    local -r trimmed_right="${trimmed_left%"${trimmed_left##*[![:space:]]}"}"
+    printf '%s\n' "${trimmed_right}"
+    return 0
+  fi
+}
+
 function pblib::str::2arr() {
   local -r string="$1"
   shift $#
@@ -302,8 +316,8 @@ function pblib::str::2arr() {
     local -a array
     local char
     for (( i = 0; i < ${#string}; ++i )); do
-      char="${string:${i}:1}" 
-      if [[ $char = '' ]]; then
+      char="${string:${i}:1}"
+      if [[ -z $char ]]; then
         array+=(' ')
       else
         array+=("${char}")
@@ -421,7 +435,7 @@ function pblib::fs::tail() {
   local -ri lines="$1"
   local -r file="$2"
   shift $#
-  
+
   if (( lines == 0 )) || [[ ! -f $file ]]; then
     return 1
   else
@@ -493,7 +507,7 @@ function pblib::fs::basename() {
   else
     local -r basename_no_path="${file%"${##*[!/]}"}"
     local -r basename="${basename_no_path##*/}"
-    local -r basename_no_suffix="${basename%"${suffix/"${basename}"}"}"
+    local -r basename_no_suffix="${basename%"${suffix/$basename}"}"
 		printf '%s\n' "${basename_no_suffix}"
     return 0
   fi
